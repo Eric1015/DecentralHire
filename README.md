@@ -1,8 +1,24 @@
-# Sample Hardhat Project
+# DecentralHire
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
+This is a blockchain project that makes the hiring process more transparent.
 
-Try running some of the following tasks:
+
+### Commands
+
+```shell
+# running the test
+npx hardhat test
+
+# deploy the contract
+npx hardhat run scripts/deploy.ts
+
+# running a localhost node
+npx hardhat node
+
+# deploy the contract to localhost
+npx hardhat run --network localhost scripts/deploy.ts
+```
+
 
 ```shell
 npx hardhat help
