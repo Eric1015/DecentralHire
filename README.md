@@ -11,12 +11,29 @@ npx hardhat test
 
 # deploy the contract
 npx hardhat run scripts/deploy.ts
+```
 
-# running a localhost node
-npx hardhat node
+For local testing:
 
-# deploy the contract to localhost
-npx hardhat run --network localhost scripts/deploy.ts
+```shell
+# start the local network
+npx hardhat node --network hardhat
+
+# copy one of the private key listed in the accounts and import the account in Metamask for test usage.
+
+# deploy the contract to local network
+npx hardhat run scripts/deploy.ts --network localhost
+```
+
+
+### Test Code generation with ChatGPT
+
+```shell
+# input the following prompt command to ChatGPT for it to generate the test code for you:
+
+Can you write the hardhat test code for the following solidity smart contract by leveraging loadFixture function from the library "@nomicfoundation/hardhat-network-helpers"?
+
+<Contract file content here>
 ```
 
 

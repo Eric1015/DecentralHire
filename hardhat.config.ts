@@ -1,4 +1,4 @@
-import { HardhatUserConfig } from 'hardhat/config';
+import { HardhatUserConfig, task } from 'hardhat/config';
 import '@nomicfoundation/hardhat-toolbox';
 import { config as dotEnvConfig } from 'dotenv';
 dotEnvConfig();
@@ -9,6 +9,9 @@ const config: HardhatUserConfig = {
     sepolia: {
       url: process.env.INFURA_URL_SEPOLIA,
       accounts: [process.env.ACCOUNT_PRIVATE_KEY_SEPOLIA || ''],
+    },
+    hardhat: {
+      chainId: 1337,
     },
   },
   paths: {

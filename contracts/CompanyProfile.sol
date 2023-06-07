@@ -21,6 +21,14 @@ contract CompanyProfile {
         _;
     }
 
+    function getCompanyName() public view returns (string memory) {
+        return name;
+    }
+
+    function getWebsiteUrl() public view returns (string memory) {
+        return websiteUrl;
+    }
+
     function setCompanyName(string memory _name) public onlyOwner {
         name = _name;
     }
