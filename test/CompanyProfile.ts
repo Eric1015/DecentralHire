@@ -1,0 +1,117 @@
+// SPDX-License-Identifier: MIT License
+import { ethers } from 'hardhat';
+import { expect } from 'chai';
+import { loadFixture } from '@nomicfoundation/hardhat-network-helpers';
+import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
+
+describe('CompanyProfile', function () {
+  const name = 'Example Company';
+  const websiteUrl = 'https://example.com';
+  let owner: SignerWithAddress;
+  let addr1: SignerWithAddress;
+  let JobPosting: any;
+
+  async function setupFixture() {
+    [owner, addr1] = await ethers.getSigners();
+    const CompanyProfile = await ethers.getContractFactory(
+      'CompanyProfile',
+      owner
+    );
+    JobPosting = await ethers.getContractFactory('JobPosting');
+    const companyProfile = await CompanyProfile.deploy('', '');
+
+    return { companyProfile };
+  }
+
+  it('should have correct initial values', async function () {
+    const { companyProfile } = await loadFixture(setupFixture);
+    expect(await companyProfile.getCompanyName()).to.equal('');
+    expect(await companyProfile.getWebsiteUrl()).to.equal('');
+  });
+
+  it('should allow the owner to update the company name', async function () {
+    const { companyProfile } = await loadFixture(setupFixture);
+    await companyProfile.setCompanyName(name);
+
+    expect(await companyProfile.getCompanyName()).to.equal(name);
+  });
+
+  it('should revert when non-owner tries to update company name', async function () {
+    const nonOwner = addr1;
+
+    const { companyProfile } = await loadFixture(setupFixture);
+    await expect(
+      companyProfile.connect(nonOwner).setCompanyName(name)
+    ).to.be.revertedWith('Only owner is allowed to perform the action.');
+
+    expect(await companyProfile.getCompanyName()).to.equal('');
+  });
+
+  it('should allow the owner to update the website URL', async function () {
+    const { companyProfile } = await loadFixture(setupFixture);
+    await companyProfile.setWebsiteUrl(websiteUrl);
+
+    expect(await companyProfile.getWebsiteUrl()).to.equal(websiteUrl);
+  });
+
+  it('should revert when non-owner tries to update the website URL', async function () {
+    const nonOwner = addr1;
+
+    const { companyProfile } = await loadFixture(setupFixture);
+    await expect(
+      companyProfile.connect(nonOwner).setWebsiteUrl(websiteUrl)
+    ).to.be.revertedWith('Only owner is allowed to perform the action.');
+
+    expect(await companyProfile.getWebsiteUrl()).to.equal('');
+  });
+
+  it('should create a job posting', async function () {
+    const title = 'Software Engineer';
+    const jobDescriptionIpfsHash =
+      'QmTjDxLoFhqW5G45eZDhswH3wSPx8zeHH2Fyju1pKxZYdE';
+    const location = 'Remote';
+    const isRemote = true;
+    const totalHiringCount = 5;
+    const { companyProfile } = await loadFixture(setupFixture);
+    const createJobPostingTx = await companyProfile.createJobPosting(
+      title,
+      jobDescriptionIpfsHash,
+      location,
+      isRemote,
+      totalHiringCount
+    );
+    await createJobPostingTx.wait();
+
+    expect(createJobPostingTx)
+      .to.emit(companyProfile, 'JobPostingCreatedEvent')
+      .withArgs(createJobPostingTx.from);
+  });
+
+  it('should revert when non-owner tries to create a job posting', async function () {
+    const nonOwner = addr1;
+
+    const title = 'Software Engineer';
+    const jobDescriptionIpfsHash =
+      'QmTjDxLoFhqW5G45eZDhswH3wSPx8zeHH2Fyju1pKxZYdE';
+    const location = 'Remote';
+    const isRemote = true;
+    const totalHiringCount = 5;
+
+    const { companyProfile } = await loadFixture(setupFixture);
+    await expect(
+      companyProfile
+        .connect(nonOwner)
+        .createJobPosting(
+          title,
+          jobDescriptionIpfsHash,
+          location,
+          isRemote,
+          totalHiringCount
+        )
+    ).to.be.revertedWith('Only owner is allowed to perform the action.');
+
+    const activeJobPostings = await companyProfile.listActiveJobPostings();
+
+    expect(activeJobPostings.length).to.equal(0);
+  });
+});

@@ -1,11 +1,23 @@
 // SPDX-License-Identifier: MIT License
 pragma solidity ^0.8.12;
 
+import "./JobPosting.sol";
+
 contract CompanyProfile {
     address public owner;
     string public name;
     string public websiteUrl;
-    mapping(address => address) jobPostings;
+    mapping(address => JobPosting) jobPostings;
+    address[] public activeJobPostingAddresses;
+
+    event JobPostingCreatedEvent(
+        address indexed _from,
+        string indexed _companyName,
+        string indexed _title,
+        string _location,
+        bool _isRemote,
+        address _contractAddress
+    );
 
     constructor(string memory _name, string memory _websiteUrl) {
         owner = msg.sender;
@@ -35,5 +47,45 @@ contract CompanyProfile {
 
     function setWebsiteUrl(string memory _websiteUrl) public onlyOwner {
         websiteUrl = _websiteUrl;
+    }
+
+    function createJobPosting(
+        string memory _title,
+        string memory _jobDescriptionIpfsHash,
+        string memory _location,
+        bool _isRemote,
+        uint _totalHiringCount
+    ) public onlyOwner {
+        JobPosting jobPosting = new JobPosting(
+            _title,
+            _jobDescriptionIpfsHash,
+            _location,
+            _isRemote,
+            _totalHiringCount
+        );
+        jobPostings[address(jobPosting)] = jobPosting;
+        activeJobPostingAddresses.push(address(jobPosting));
+        emit JobPostingCreatedEvent(
+            msg.sender,
+            name,
+            _title,
+            _location,
+            _isRemote,
+            address(jobPosting)
+        );
+    }
+
+    function listActiveJobPostings() public view returns (JobPosting[] memory) {
+        JobPosting[] memory activeJobPostings = new JobPosting[](
+            activeJobPostingAddresses.length
+        );
+        for (uint i = 0; i < activeJobPostingAddresses.length; i++) {
+            if (jobPostings[activeJobPostingAddresses[i]].isActive()) {
+                activeJobPostings[i] = jobPostings[
+                    activeJobPostingAddresses[i]
+                ];
+            }
+        }
+        return activeJobPostings;
     }
 }

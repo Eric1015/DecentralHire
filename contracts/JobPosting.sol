@@ -3,14 +3,28 @@ pragma solidity ^0.8.12;
 
 contract JobPosting {
     address public owner;
+    string public title;
+    string public jobDescriptionIpfsHash;
+    string public location;
+    bool public isRemote = false;
     uint public totalHiringCount;
     uint public currentHiredCount = 0;
     bool public isActive = true;
     mapping(address => Hiring) public hiredApplicants;
     mapping(address => address) public receivedApplications;
 
-    constructor(uint _totalHiringCount) {
+    constructor(
+        string memory _title,
+        string memory _jobDescriptionIpfsHash,
+        string memory _location,
+        bool _isRemote,
+        uint _totalHiringCount
+    ) {
         owner = msg.sender;
+        title = _title;
+        jobDescriptionIpfsHash = _jobDescriptionIpfsHash;
+        location = _location;
+        isRemote = _isRemote;
         totalHiringCount = _totalHiringCount;
     }
 
