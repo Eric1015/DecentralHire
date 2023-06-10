@@ -22,7 +22,7 @@ npx hardhat node --network hardhat
 # copy one of the private key listed in the accounts and import the account in Metamask for test usage.
 
 # deploy the contract to local network
-npx hardhat run scripts/deploy.ts --network localhost
+npx hardhat run scripts/deploy.ts --network hardhat
 ```
 
 
