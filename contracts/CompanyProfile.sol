@@ -9,6 +9,7 @@ contract CompanyProfile {
     string public websiteUrl;
     mapping(address => JobPosting) jobPostings;
     address[] public activeJobPostingAddresses;
+    address public decentralHireAddress;
 
     event JobPostingCreatedEvent(
         address indexed _from,
@@ -20,8 +21,13 @@ contract CompanyProfile {
         address _contractAddress
     );
 
-    constructor(string memory _name, string memory _websiteUrl) {
-        owner = msg.sender;
+    constructor(
+        address _owner,
+        string memory _name,
+        string memory _websiteUrl
+    ) {
+        owner = _owner;
+        decentralHireAddress = msg.sender;
         name = _name;
         websiteUrl = _websiteUrl;
     }

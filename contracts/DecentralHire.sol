@@ -33,7 +33,11 @@ contract DecentralHire {
         string memory _name,
         string memory _websiteUrl
     ) public noExistingCompanyProfileForSender {
-        CompanyProfile companyProfile = new CompanyProfile(_name, _websiteUrl);
+        CompanyProfile companyProfile = new CompanyProfile(
+            msg.sender,
+            _name,
+            _websiteUrl
+        );
         companyProfileOwnerToContractAddress[
             msg.sender
         ] = CompanyProfileMetadata(address(companyProfile), true);
