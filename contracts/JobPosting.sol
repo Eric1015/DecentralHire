@@ -5,7 +5,8 @@ contract JobPosting {
     address public owner;
     string public title;
     string public jobDescriptionIpfsHash;
-    string public location;
+    string public country;
+    string public city;
     bool public isRemote = false;
     uint public totalHiringCount;
     uint public currentHiredCount = 0;
@@ -16,14 +17,16 @@ contract JobPosting {
     constructor(
         string memory _title,
         string memory _jobDescriptionIpfsHash,
-        string memory _location,
+        string memory _country,
+        string memory _city,
         bool _isRemote,
         uint _totalHiringCount
     ) {
         owner = msg.sender;
         title = _title;
         jobDescriptionIpfsHash = _jobDescriptionIpfsHash;
-        location = _location;
+        country = _country;
+        city = _city;
         isRemote = _isRemote;
         totalHiringCount = _totalHiringCount;
     }

@@ -69,14 +69,16 @@ describe('CompanyProfile', function () {
     const title = 'Software Engineer';
     const jobDescriptionIpfsHash =
       'QmTjDxLoFhqW5G45eZDhswH3wSPx8zeHH2Fyju1pKxZYdE';
-    const location = 'Remote';
-    const isRemote = true;
+    const country = 'United States';
+    const city = 'San Francisco';
+    const isRemote = false;
     const totalHiringCount = 5;
     const { companyProfile } = await loadFixture(setupFixture);
     const createJobPostingTx = await companyProfile.createJobPosting(
       title,
       jobDescriptionIpfsHash,
-      location,
+      country,
+      city,
       isRemote,
       totalHiringCount
     );
@@ -93,7 +95,8 @@ describe('CompanyProfile', function () {
     const title = 'Software Engineer';
     const jobDescriptionIpfsHash =
       'QmTjDxLoFhqW5G45eZDhswH3wSPx8zeHH2Fyju1pKxZYdE';
-    const location = 'Remote';
+    const country = '';
+    const city = '';
     const isRemote = true;
     const totalHiringCount = 5;
 
@@ -104,7 +107,8 @@ describe('CompanyProfile', function () {
         .createJobPosting(
           title,
           jobDescriptionIpfsHash,
-          location,
+          country,
+          city,
           isRemote,
           totalHiringCount
         )

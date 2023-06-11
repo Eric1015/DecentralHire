@@ -14,7 +14,8 @@ contract CompanyProfile {
         address indexed _from,
         string indexed _companyName,
         string indexed _title,
-        string _location,
+        string _country,
+        string _city,
         bool _isRemote,
         address _contractAddress
     );
@@ -52,14 +53,16 @@ contract CompanyProfile {
     function createJobPosting(
         string memory _title,
         string memory _jobDescriptionIpfsHash,
-        string memory _location,
+        string memory _country,
+        string memory _city,
         bool _isRemote,
         uint _totalHiringCount
     ) public onlyOwner {
         JobPosting jobPosting = new JobPosting(
             _title,
             _jobDescriptionIpfsHash,
-            _location,
+            _country,
+            _city,
             _isRemote,
             _totalHiringCount
         );
@@ -69,7 +72,8 @@ contract CompanyProfile {
             msg.sender,
             name,
             _title,
-            _location,
+            _country,
+            _city,
             _isRemote,
             address(jobPosting)
         );
