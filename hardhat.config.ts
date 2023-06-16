@@ -4,7 +4,15 @@ import { config as dotEnvConfig } from 'dotenv';
 dotEnvConfig();
 
 const config: HardhatUserConfig = {
-  solidity: '0.8.18',
+  solidity: {
+    version: '0.8.18',
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 1000,
+      },
+    },
+  },
   networks: {
     sepolia: {
       url: process.env.INFURA_URL_SEPOLIA,

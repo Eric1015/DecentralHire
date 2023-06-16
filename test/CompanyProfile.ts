@@ -9,16 +9,22 @@ describe('CompanyProfile', function () {
   const websiteUrl = 'https://example.com';
   let owner: SignerWithAddress;
   let addr1: SignerWithAddress;
+  let developer: SignerWithAddress;
   let JobPosting: any;
 
   async function setupFixture() {
-    [owner, addr1] = await ethers.getSigners();
+    [owner, addr1, developer] = await ethers.getSigners();
     const CompanyProfile = await ethers.getContractFactory(
       'CompanyProfile',
       owner
     );
     JobPosting = await ethers.getContractFactory('JobPosting');
-    const companyProfile = await CompanyProfile.deploy('', '');
+    const companyProfile = await CompanyProfile.deploy(
+      developer.address,
+      owner.address,
+      '',
+      ''
+    );
 
     return { companyProfile };
   }
@@ -80,7 +86,10 @@ describe('CompanyProfile', function () {
       country,
       city,
       isRemote,
-      totalHiringCount
+      totalHiringCount,
+      {
+        value: ethers.utils.parseEther('0.01'),
+      }
     );
     await createJobPostingTx.wait();
 

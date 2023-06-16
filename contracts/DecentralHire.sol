@@ -12,7 +12,12 @@ contract DecentralHire {
         bool exists;
     }
 
+    address payable internal developerAddress;
     mapping(address => CompanyProfileMetadata) companyProfileOwnerToContractAddress;
+
+    constructor() {
+        developerAddress = payable(msg.sender);
+    }
 
     event CompanyProfileCreatedEvent(
         address indexed _from,
@@ -34,6 +39,7 @@ contract DecentralHire {
         string memory _websiteUrl
     ) public noExistingCompanyProfileForSender {
         CompanyProfile companyProfile = new CompanyProfile(
+            developerAddress,
             msg.sender,
             _name,
             _websiteUrl
