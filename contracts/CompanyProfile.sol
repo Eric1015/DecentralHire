@@ -113,4 +113,6 @@ contract CompanyProfile {
         }
         return activeJobPostings;
     }
+
+    fallback() external {}
 }

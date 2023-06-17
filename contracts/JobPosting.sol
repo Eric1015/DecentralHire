@@ -272,4 +272,6 @@ contract JobPosting {
         jobClosingReason = _reason;
         isActive = false;
     }
+
+    fallback() external {}
 }

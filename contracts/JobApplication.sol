@@ -154,4 +154,6 @@ contract JobApplication {
         applicationStatus = ApplicationStatus.Hired;
         emit HiredEvent(applicant, address(this));
     }
+
+    fallback() external {}
 }

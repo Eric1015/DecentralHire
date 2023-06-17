@@ -71,11 +71,5 @@ contract DecentralHire {
 
     event EtherReceived(address sender, uint256 value);
 
-    receive() external payable {
-        emit EtherReceived(msg.sender, msg.value);
-
-        // Additional code for handling the received Ether
-    }
-
     fallback() external {}
 }
