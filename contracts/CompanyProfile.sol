@@ -10,6 +10,7 @@ contract CompanyProfile {
     address public owner;
     string public name;
     string public websiteUrl;
+    string public logoCid;
     mapping(address => JobPosting) jobPostings;
     address[] public activeJobPostingAddresses;
     address public decentralHireAddress;
@@ -19,13 +20,15 @@ contract CompanyProfile {
         address _eventEmitterAddress,
         address _owner,
         string memory _name,
-        string memory _websiteUrl
+        string memory _websiteUrl,
+        string memory _logoCid
     ) {
         developerAddress = _developerAddress;
         owner = _owner;
         decentralHireAddress = msg.sender;
         name = _name;
         websiteUrl = _websiteUrl;
+        logoCid = _logoCid;
         eventEmitterAddress = _eventEmitterAddress;
         EventEmitter eventEmitter = EventEmitter(_eventEmitterAddress);
         eventEmitter.sendCompanyProfileCreatedEvent(
@@ -59,12 +62,20 @@ contract CompanyProfile {
         return websiteUrl;
     }
 
+    function getLogoCid() public view returns (string memory) {
+        return logoCid;
+    }
+
     function setCompanyName(string memory _name) public onlyOwner {
         name = _name;
     }
 
     function setWebsiteUrl(string memory _websiteUrl) public onlyOwner {
         websiteUrl = _websiteUrl;
+    }
+
+    function setLogoCid(string memory _logoCid) public onlyOwner {
+        logoCid = _logoCid;
     }
 
     // cost of 0.01 ETH is required to post a job

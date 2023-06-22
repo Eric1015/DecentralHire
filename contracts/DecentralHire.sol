@@ -33,14 +33,16 @@ contract DecentralHire {
 
     function createCompanyProfile(
         string memory _name,
-        string memory _websiteUrl
+        string memory _websiteUrl,
+        string memory _logoCid
     ) public noExistingCompanyProfileForSender {
         CompanyProfile companyProfile = new CompanyProfile(
             developerAddress,
             eventEmitterAddress,
             msg.sender,
             _name,
-            _websiteUrl
+            _websiteUrl,
+            _logoCid
         );
         companyProfileOwnerToContractAddress[
             msg.sender
