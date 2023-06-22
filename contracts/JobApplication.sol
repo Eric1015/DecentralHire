@@ -2,6 +2,7 @@
 pragma solidity ^0.8.12;
 
 import "./JobPosting.sol";
+import "./EventEmitter.sol";
 
 contract JobApplication {
     enum ApplicationStatus {
@@ -13,6 +14,7 @@ contract JobApplication {
         Hired
     }
 
+    address internal eventEmitterAddress;
     address public applicant;
     address public companyProfileOwner;
     JobPosting public jobPosting;
@@ -20,39 +22,18 @@ contract JobApplication {
     ApplicationStatus public applicationStatus = ApplicationStatus.InProgress;
 
     constructor(
+        address _eventEmitterAddress,
         address _applicant,
         address _jobPosting,
         string memory _resumeCid
     ) {
+        eventEmitterAddress = _eventEmitterAddress;
         applicant = _applicant;
         jobPosting = JobPosting(_jobPosting);
         resumeCid = _resumeCid;
+        EventEmitter eventEmitter = EventEmitter(_eventEmitterAddress);
+        eventEmitter.sendJobApplicationCreatedEvent(_applicant, address(this));
     }
-
-    event OfferSentEvent(
-        address indexed _applicant,
-        address indexed _jobApplication
-    );
-
-    event OfferAcceptedEvent(
-        address indexed _applicant,
-        address indexed _jobApplication
-    );
-
-    event OfferDeclinedEvent(
-        address indexed _applicant,
-        address indexed _jobApplication
-    );
-
-    event ApplicationDeclinedEvent(
-        address indexed _applicant,
-        address indexed _jobApplication
-    );
-
-    event HiredEvent(
-        address indexed _applicant,
-        address indexed _jobApplication
-    );
 
     function getApplicationStatusString(
         ApplicationStatus _status
@@ -125,7 +106,8 @@ contract JobApplication {
         onlyWhenApplicationInStatus(ApplicationStatus.InProgress)
     {
         applicationStatus = ApplicationStatus.OfferSent;
-        emit OfferSentEvent(applicant, address(this));
+        EventEmitter eventEmitter = EventEmitter(eventEmitterAddress);
+        eventEmitter.sendOfferSentEvent(applicant, address(this));
     }
 
     function acceptOffer()
@@ -134,7 +116,8 @@ contract JobApplication {
         onlyWhenApplicationInStatus(ApplicationStatus.OfferSent)
     {
         applicationStatus = ApplicationStatus.OfferAccepted;
-        emit OfferAcceptedEvent(applicant, address(this));
+        EventEmitter eventEmitter = EventEmitter(eventEmitterAddress);
+        eventEmitter.sendOfferAcceptedEvent(applicant, address(this));
     }
 
     function declineOffer()
@@ -143,7 +126,8 @@ contract JobApplication {
         onlyWhenApplicationInStatus(ApplicationStatus.OfferSent)
     {
         applicationStatus = ApplicationStatus.OfferDeclined;
-        emit OfferDeclinedEvent(applicant, address(this));
+        EventEmitter eventEmitter = EventEmitter(eventEmitterAddress);
+        eventEmitter.sendOfferDeclinedEvent(applicant, address(this));
     }
 
     function onReceiveHire()
@@ -152,7 +136,8 @@ contract JobApplication {
         onlyWhenApplicationInStatus(ApplicationStatus.OfferAccepted)
     {
         applicationStatus = ApplicationStatus.Hired;
-        emit HiredEvent(applicant, address(this));
+        EventEmitter eventEmitter = EventEmitter(eventEmitterAddress);
+        eventEmitter.sendHiredEvent(applicant, address(this));
     }
 
     fallback() external {}

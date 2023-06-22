@@ -2,9 +2,11 @@
 pragma solidity ^0.8.12;
 
 import "./JobPosting.sol";
+import "./EventEmitter.sol";
 
 contract CompanyProfile {
     address payable internal developerAddress;
+    address internal eventEmitterAddress;
     address public owner;
     string public name;
     string public websiteUrl;
@@ -12,18 +14,9 @@ contract CompanyProfile {
     address[] public activeJobPostingAddresses;
     address public decentralHireAddress;
 
-    event JobPostingCreatedEvent(
-        address indexed _from,
-        string indexed _companyName,
-        string indexed _title,
-        string _country,
-        string _city,
-        bool _isRemote,
-        address _contractAddress
-    );
-
     constructor(
         address payable _developerAddress,
+        address _eventEmitterAddress,
         address _owner,
         string memory _name,
         string memory _websiteUrl
@@ -33,6 +26,13 @@ contract CompanyProfile {
         decentralHireAddress = msg.sender;
         name = _name;
         websiteUrl = _websiteUrl;
+        eventEmitterAddress = _eventEmitterAddress;
+        EventEmitter eventEmitter = EventEmitter(_eventEmitterAddress);
+        eventEmitter.sendCompanyProfileCreatedEvent(
+            address(this),
+            _name,
+            _websiteUrl
+        );
     }
 
     modifier onlyOwner() {
@@ -78,6 +78,7 @@ contract CompanyProfile {
     ) public payable onlyOwner onlyWhenMinimumFeePaidForPosting {
         JobPosting jobPosting = new JobPosting(
             developerAddress,
+            eventEmitterAddress,
             owner,
             _title,
             _jobDescriptionIpfsHash,
@@ -88,15 +89,6 @@ contract CompanyProfile {
         );
         jobPostings[address(jobPosting)] = jobPosting;
         activeJobPostingAddresses.push(address(jobPosting));
-        emit JobPostingCreatedEvent(
-            msg.sender,
-            name,
-            _title,
-            _country,
-            _city,
-            _isRemote,
-            address(jobPosting)
-        );
         developerAddress.transfer(msg.value);
     }
 

@@ -2,6 +2,7 @@
 pragma solidity ^0.8.12;
 
 import "./CompanyProfile.sol";
+import "./EventEmitter.sol";
 
 // Uncomment this line to use console.log
 // import "hardhat/console.sol";
@@ -12,19 +13,15 @@ contract DecentralHire {
         bool exists;
     }
 
+    address internal eventEmitterAddress;
     address payable internal developerAddress;
     mapping(address => CompanyProfileMetadata) companyProfileOwnerToContractAddress;
 
     constructor() {
         developerAddress = payable(msg.sender);
+        EventEmitter eventEmitter = new EventEmitter(address(this));
+        eventEmitterAddress = address(eventEmitter);
     }
-
-    event CompanyProfileCreatedEvent(
-        address indexed _from,
-        string indexed _name,
-        string _websiteUrl,
-        address _contractAddress
-    );
 
     modifier noExistingCompanyProfileForSender() {
         require(
@@ -40,6 +37,7 @@ contract DecentralHire {
     ) public noExistingCompanyProfileForSender {
         CompanyProfile companyProfile = new CompanyProfile(
             developerAddress,
+            eventEmitterAddress,
             msg.sender,
             _name,
             _websiteUrl
@@ -47,12 +45,6 @@ contract DecentralHire {
         companyProfileOwnerToContractAddress[
             msg.sender
         ] = CompanyProfileMetadata(address(companyProfile), true);
-        emit CompanyProfileCreatedEvent(
-            msg.sender,
-            _name,
-            _websiteUrl,
-            address(companyProfile)
-        );
     }
 
     function getCompanyProfileByOwner(
@@ -69,7 +61,9 @@ contract DecentralHire {
         return companyProfileOwnerToContractAddress[_address].exists;
     }
 
-    event EtherReceived(address sender, uint256 value);
+    function getEventEmitterAddress() public view returns (address) {
+        return eventEmitterAddress;
+    }
 
     fallback() external {}
 }

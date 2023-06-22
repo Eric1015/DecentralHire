@@ -2,6 +2,7 @@
 pragma solidity ^0.8.12;
 
 import "./JobApplication.sol";
+import "./EventEmitter.sol";
 
 contract JobPosting {
     struct JobPostingMetadata {
@@ -17,6 +18,7 @@ contract JobPosting {
     }
 
     address payable internal developerAddress;
+    address internal eventEmitterAddress;
     address public companyProfileAddress;
     address public companyProfileOwner;
     string public title;
@@ -33,6 +35,7 @@ contract JobPosting {
 
     constructor(
         address payable _developerAddress,
+        address _eventEmitterAddress,
         address _companyProfileOwner,
         string memory _title,
         string memory _jobDescriptionIpfsHash,
@@ -50,6 +53,16 @@ contract JobPosting {
         city = _city;
         isRemote = _isRemote;
         totalHiringCount = _totalHiringCount;
+        eventEmitterAddress = _eventEmitterAddress;
+        EventEmitter eventEmitter = EventEmitter(_eventEmitterAddress);
+        eventEmitter.sendJobPostingCreatedEvent(
+            msg.sender,
+            _title,
+            _country,
+            _city,
+            _isRemote,
+            address(this)
+        );
     }
 
     struct Hiring {
@@ -62,16 +75,6 @@ contract JobPosting {
         address jobApplicationAddress;
         bool applied;
     }
-
-    event JobPostingClosedEvent(
-        address indexed _from,
-        address _contractAddress
-    );
-
-    event JobApplicationCreatedEvent(
-        address indexed _applicant,
-        address indexed _contractAddress
-    );
 
     modifier onlyOwner() {
         require(
@@ -240,6 +243,7 @@ contract JobPosting {
         onlyWhenMinimumFeePaidForApplication
     {
         JobApplication jobApplication = new JobApplication(
+            eventEmitterAddress,
             msg.sender,
             address(this),
             resumeCid
@@ -249,7 +253,6 @@ contract JobPosting {
             address(jobApplication),
             true
         );
-        emit JobApplicationCreatedEvent(msg.sender, address(jobApplication));
         developerAddress.transfer(msg.value);
     }
 
@@ -276,7 +279,11 @@ contract JobPosting {
     ) public onlyOwner onlyWhileActive {
         jobClosingReason = _reason;
         isActive = false;
-        emit JobPostingClosedEvent(msg.sender, address(this));
+        EventEmitter eventEmitter = EventEmitter(eventEmitterAddress);
+        eventEmitter.sendJobPostingClosedEvent(
+            companyProfileAddress,
+            address(this)
+        );
     }
 
     fallback() external {}

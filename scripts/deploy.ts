@@ -12,8 +12,10 @@ async function main() {
   const decentralHire = await DecentralHire.deploy();
 
   await decentralHire.deployed();
+  const eventEmitterAddress = await decentralHire.getEventEmitterAddress();
 
   console.log(`DecentralHire deployed to ${decentralHire.address}`);
+  console.log(`EventEmitter deployed to ${eventEmitterAddress}`);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
