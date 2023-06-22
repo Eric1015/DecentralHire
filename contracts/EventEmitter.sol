@@ -10,13 +10,13 @@ contract EventEmitter {
 
     event CompanyProfileCreatedEvent(
         address indexed _contractAddress,
-        string indexed _name,
+        string _name,
         string _websiteUrl
     );
 
     event JobPostingCreatedEvent(
         address indexed _companyProfileAddress,
-        string indexed _title,
+        string _title,
         string _country,
         string _city,
         bool _isRemote,
