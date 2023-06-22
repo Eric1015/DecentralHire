@@ -25,6 +25,12 @@ npx hardhat node --network hardhat
 npx hardhat run scripts/deploy.ts --network hardhat
 ```
 
+For deploying to Sepolia testnet:
+
+```shell
+npx hardhat run scripts/deploy.ts --network sepolia
+```
+
 
 ### Test Code generation with ChatGPT
 

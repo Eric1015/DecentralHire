@@ -63,6 +63,11 @@ contract JobPosting {
         bool applied;
     }
 
+    event JobPostingClosedEvent(
+        address indexed _from,
+        address _contractAddress
+    );
+
     event JobApplicationCreatedEvent(
         address indexed _applicant,
         address indexed _contractAddress
@@ -271,6 +276,7 @@ contract JobPosting {
     ) public onlyOwner onlyWhileActive {
         jobClosingReason = _reason;
         isActive = false;
+        emit JobPostingClosedEvent(msg.sender, address(this));
     }
 
     fallback() external {}
