@@ -3,6 +3,7 @@ pragma solidity ^0.8.12;
 
 import "./JobPosting.sol";
 import "./EventEmitter.sol";
+import "./Types.sol";
 
 contract CompanyProfile {
     address payable internal developerAddress;
@@ -103,15 +104,21 @@ contract CompanyProfile {
         developerAddress.transfer(msg.value);
     }
 
-    function listActiveJobPostings() public view returns (JobPosting[] memory) {
-        JobPosting[] memory activeJobPostings = new JobPosting[](
-            activeJobPostingAddresses.length
-        );
+    function listActiveJobPostings()
+        public
+        view
+        returns (JobPostingMetadata[] memory)
+    {
+        JobPostingMetadata[]
+            memory activeJobPostings = new JobPostingMetadata[](
+                activeJobPostingAddresses.length
+            );
         for (uint i = 0; i < activeJobPostingAddresses.length; i++) {
             if (jobPostings[activeJobPostingAddresses[i]].isActive()) {
-                activeJobPostings[i] = jobPostings[
+                JobPosting jobPosting = JobPosting(
                     activeJobPostingAddresses[i]
-                ];
+                );
+                activeJobPostings[i] = jobPosting.getJobPostingMetadata();
             }
         }
         return activeJobPostings;

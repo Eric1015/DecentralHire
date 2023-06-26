@@ -3,20 +3,9 @@ pragma solidity ^0.8.12;
 
 import "./JobApplication.sol";
 import "./EventEmitter.sol";
+import "./Types.sol";
 
 contract JobPosting {
-    struct JobPostingMetadata {
-        address companyProfileAddress;
-        string title;
-        string jobDescriptionIpfsHash;
-        string country;
-        string city;
-        bool isRemote;
-        uint totalHiringCount;
-        uint currentHiredCount;
-        bool isActive;
-    }
-
     address payable internal developerAddress;
     address internal eventEmitterAddress;
     address public companyProfileAddress;
@@ -206,6 +195,7 @@ contract JobPosting {
         return
             JobPostingMetadata(
                 companyProfileAddress,
+                address(this),
                 title,
                 jobDescriptionIpfsHash,
                 country,
