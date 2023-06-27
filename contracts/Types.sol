@@ -4,6 +4,7 @@ pragma solidity ^0.8.12;
 struct JobPostingMetadata {
     address companyProfileAddress;
     address jobPostingAddress;
+    address owner;
     string title;
     string jobDescriptionIpfsHash;
     string country;

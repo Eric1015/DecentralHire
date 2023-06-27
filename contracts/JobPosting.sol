@@ -196,6 +196,7 @@ contract JobPosting {
             JobPostingMetadata(
                 companyProfileAddress,
                 address(this),
+                companyProfileOwner,
                 title,
                 jobDescriptionIpfsHash,
                 country,

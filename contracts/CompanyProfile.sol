@@ -79,6 +79,16 @@ contract CompanyProfile {
         logoCid = _logoCid;
     }
 
+    function updateCompanyProfile(
+        string memory _name,
+        string memory _websiteUrl,
+        string memory _logoCid
+    ) public onlyOwner {
+        name = _name;
+        websiteUrl = _websiteUrl;
+        logoCid = _logoCid;
+    }
+
     // cost of 0.01 ETH is required to post a job
     function createJobPosting(
         string memory _title,
