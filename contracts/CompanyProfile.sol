@@ -114,6 +114,23 @@ contract CompanyProfile {
         developerAddress.transfer(msg.value);
     }
 
+    function closeJobPosting(
+        address _jobPostingAddress,
+        string memory _jobClosingReason
+    ) public onlyOwner {
+        JobPosting jobPosting = JobPosting(_jobPostingAddress);
+        jobPosting.closePosting(_jobClosingReason);
+        for (uint i = 0; i < activeJobPostingAddresses.length; i++) {
+            if (activeJobPostingAddresses[i] == _jobPostingAddress) {
+                activeJobPostingAddresses[i] = activeJobPostingAddresses[
+                    activeJobPostingAddresses.length - 1
+                ];
+                activeJobPostingAddresses.pop();
+                break;
+            }
+        }
+    }
+
     function listActiveJobPostings()
         public
         view
