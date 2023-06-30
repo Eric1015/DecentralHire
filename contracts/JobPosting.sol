@@ -105,7 +105,7 @@ contract JobPosting {
     modifier onlyWhenMinimumFeePaidForApplication() {
         require(
             msg.value >= 0.001 ether,
-            "Minimum fee of 0.1 ether is required for applying to this job."
+            "Minimum fee of 0.001 ether is required for applying to this job."
         );
         _;
     }
