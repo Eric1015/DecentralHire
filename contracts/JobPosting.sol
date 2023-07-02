@@ -263,6 +263,14 @@ contract JobPosting {
         jobApplication.onReceiveOffer();
     }
 
+    function decline(
+        address _applicant
+    ) public onlyOwner onlyWhileActive onlyWhenApplicantExists(_applicant) {
+        JobApplication jobApplication = receivedApplications[_applicant]
+            .jobApplication;
+        jobApplication.onReceiveDecline();
+    }
+
     function hire(
         address _applicant
     ) public onlyOwner onlyIfSpotAvailable onlyWhenApplicantExists(_applicant) {

@@ -163,6 +163,20 @@ contract JobApplication {
         );
     }
 
+    function onReceiveDecline()
+        public
+        onlyJobPostingOwner
+        onlyWhenApplicationInStatus(ApplicationStatus.InProgress)
+    {
+        applicationStatus = ApplicationStatus.ApplicationDeclined;
+        EventEmitter eventEmitter = EventEmitter(eventEmitterAddress);
+        eventEmitter.sendApplicationDeclinedEvent(
+            applicant,
+            address(this),
+            address(jobPosting)
+        );
+    }
+
     function onReceiveHire()
         public
         onlyJobPostingOwner
