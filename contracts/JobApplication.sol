@@ -20,6 +20,7 @@ contract JobApplication {
     address public companyProfileOwner;
     JobPosting public jobPosting;
     string public resumeCid;
+    string public offerCid;
     ApplicationStatus public applicationStatus = ApplicationStatus.InProgress;
 
     constructor(
@@ -121,12 +122,15 @@ contract JobApplication {
             );
     }
 
-    function onReceiveOffer()
+    function onReceiveOffer(
+        string memory _offerCid
+    )
         public
         onlyJobPostingOwner
         onlyWhenApplicationInStatus(ApplicationStatus.InProgress)
     {
         applicationStatus = ApplicationStatus.OfferSent;
+        offerCid = _offerCid;
         EventEmitter eventEmitter = EventEmitter(eventEmitterAddress);
         eventEmitter.sendOfferSentEvent(
             applicant,

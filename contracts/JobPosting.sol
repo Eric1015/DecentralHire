@@ -256,11 +256,12 @@ contract JobPosting {
     }
 
     function sendOffer(
-        address _applicant
+        address _applicant,
+        string memory _offerCid
     ) public onlyOwner onlyWhileActive onlyWhenApplicantExists(_applicant) {
         JobApplication jobApplication = receivedApplications[_applicant]
             .jobApplication;
-        jobApplication.onReceiveOffer();
+        jobApplication.onReceiveOffer(_offerCid);
     }
 
     function decline(
