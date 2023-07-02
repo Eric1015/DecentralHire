@@ -32,7 +32,11 @@ contract JobApplication {
         jobPosting = JobPosting(_jobPosting);
         resumeCid = _resumeCid;
         EventEmitter eventEmitter = EventEmitter(_eventEmitterAddress);
-        eventEmitter.sendJobApplicationCreatedEvent(_applicant, address(this));
+        eventEmitter.sendJobApplicationCreatedEvent(
+            _applicant,
+            address(this),
+            _jobPosting
+        );
     }
 
     function getApplicationStatusString(
@@ -107,7 +111,11 @@ contract JobApplication {
     {
         applicationStatus = ApplicationStatus.OfferSent;
         EventEmitter eventEmitter = EventEmitter(eventEmitterAddress);
-        eventEmitter.sendOfferSentEvent(applicant, address(this));
+        eventEmitter.sendOfferSentEvent(
+            applicant,
+            address(this),
+            address(jobPosting)
+        );
     }
 
     function acceptOffer()
@@ -117,7 +125,11 @@ contract JobApplication {
     {
         applicationStatus = ApplicationStatus.OfferAccepted;
         EventEmitter eventEmitter = EventEmitter(eventEmitterAddress);
-        eventEmitter.sendOfferAcceptedEvent(applicant, address(this));
+        eventEmitter.sendOfferAcceptedEvent(
+            applicant,
+            address(this),
+            address(jobPosting)
+        );
     }
 
     function declineOffer()
@@ -127,7 +139,11 @@ contract JobApplication {
     {
         applicationStatus = ApplicationStatus.OfferDeclined;
         EventEmitter eventEmitter = EventEmitter(eventEmitterAddress);
-        eventEmitter.sendOfferDeclinedEvent(applicant, address(this));
+        eventEmitter.sendOfferDeclinedEvent(
+            applicant,
+            address(this),
+            address(jobPosting)
+        );
     }
 
     function onReceiveHire()
@@ -137,7 +153,11 @@ contract JobApplication {
     {
         applicationStatus = ApplicationStatus.Hired;
         EventEmitter eventEmitter = EventEmitter(eventEmitterAddress);
-        eventEmitter.sendHiredEvent(applicant, address(this));
+        eventEmitter.sendHiredEvent(
+            applicant,
+            address(this),
+            address(jobPosting)
+        );
     }
 
     fallback() external {}

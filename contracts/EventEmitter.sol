@@ -30,32 +30,38 @@ contract EventEmitter {
 
     event JobApplicationCreatedEvent(
         address indexed _applicant,
-        address indexed _contractAddress
+        address indexed _contractAddress,
+        address _jobPostingAddress
     );
 
     event OfferSentEvent(
         address indexed _applicant,
-        address indexed _contractAddress
+        address indexed _contractAddress,
+        address _jobPostingAddress
     );
 
     event OfferAcceptedEvent(
         address indexed _applicant,
-        address indexed _contractAddress
+        address indexed _contractAddress,
+        address _jobPostingAddress
     );
 
     event OfferDeclinedEvent(
         address indexed _applicant,
-        address indexed _contractAddress
+        address indexed _contractAddress,
+        address _jobPostingAddress
     );
 
     event ApplicationDeclinedEvent(
         address indexed _applicant,
-        address indexed _contractAddress
+        address indexed _contractAddress,
+        address _jobPostingAddress
     );
 
     event HiredEvent(
         address indexed _applicant,
-        address indexed _contractAddress
+        address indexed _contractAddress,
+        address _jobPostingAddress
     );
 
     function isContract(address account) public view returns (bool) {
@@ -117,43 +123,65 @@ contract EventEmitter {
 
     function sendJobApplicationCreatedEvent(
         address _applicant,
-        address _contractAddress
+        address _contractAddress,
+        address _jobPostingAddress
     ) public onlySenderMatch(_contractAddress) {
-        emit JobApplicationCreatedEvent(_applicant, _contractAddress);
+        emit JobApplicationCreatedEvent(
+            _applicant,
+            _contractAddress,
+            _jobPostingAddress
+        );
     }
 
     function sendOfferSentEvent(
         address _applicant,
-        address _contractAddress
+        address _contractAddress,
+        address _jobPostingAddress
     ) public onlySenderMatch(_contractAddress) {
-        emit OfferSentEvent(_applicant, _contractAddress);
+        emit OfferSentEvent(_applicant, _contractAddress, _jobPostingAddress);
     }
 
     function sendOfferAcceptedEvent(
         address _applicant,
-        address _contractAddress
+        address _contractAddress,
+        address _jobPostingAddress
     ) public onlySenderMatch(_contractAddress) {
-        emit OfferAcceptedEvent(_applicant, _contractAddress);
+        emit OfferAcceptedEvent(
+            _applicant,
+            _contractAddress,
+            _jobPostingAddress
+        );
     }
 
     function sendOfferDeclinedEvent(
         address _applicant,
-        address _contractAddress
+        address _contractAddress,
+        address _jobPostingAddress
     ) public onlySenderMatch(_contractAddress) {
-        emit OfferDeclinedEvent(_applicant, _contractAddress);
+        emit OfferDeclinedEvent(
+            _applicant,
+            _contractAddress,
+            _jobPostingAddress
+        );
     }
 
     function sendApplicationDeclinedEvent(
         address _applicant,
-        address _contractAddress
+        address _contractAddress,
+        address _jobPostingAddress
     ) public onlySenderMatch(_contractAddress) {
-        emit ApplicationDeclinedEvent(_applicant, _contractAddress);
+        emit ApplicationDeclinedEvent(
+            _applicant,
+            _contractAddress,
+            _jobPostingAddress
+        );
     }
 
     function sendHiredEvent(
         address _applicant,
-        address _contractAddress
+        address _contractAddress,
+        address _jobPostingAddress
     ) public onlySenderMatch(_contractAddress) {
-        emit HiredEvent(_applicant, _contractAddress);
+        emit HiredEvent(_applicant, _contractAddress, _jobPostingAddress);
     }
 }
