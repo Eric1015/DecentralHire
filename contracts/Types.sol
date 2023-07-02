@@ -14,3 +14,12 @@ struct JobPostingMetadata {
     uint currentHiredCount;
     bool isActive;
 }
+
+struct JobApplicationMetadata {
+    address jobApplicationAddress;
+    address jobPostingAddress;
+    address applicantAddress;
+    address companyProfileOwner;
+    string resumeCid;
+    string applicationStatus;
+}

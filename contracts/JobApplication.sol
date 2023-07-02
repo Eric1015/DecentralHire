@@ -3,6 +3,7 @@ pragma solidity ^0.8.12;
 
 import "./JobPosting.sol";
 import "./EventEmitter.sol";
+import "./Types.sol";
 
 contract JobApplication {
     enum ApplicationStatus {
@@ -102,6 +103,22 @@ contract JobApplication {
 
     function getCurrentApplicationStatus() public view returns (string memory) {
         return getApplicationStatusString(applicationStatus);
+    }
+
+    function getJobApplicationMetadata()
+        public
+        view
+        returns (JobApplicationMetadata memory)
+    {
+        return
+            JobApplicationMetadata(
+                address(this),
+                address(jobPosting),
+                applicant,
+                companyProfileOwner,
+                resumeCid,
+                getApplicationStatusString(applicationStatus)
+            );
     }
 
     function onReceiveOffer()

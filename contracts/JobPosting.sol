@@ -19,7 +19,9 @@ contract JobPosting {
     uint public currentHiredCount = 0;
     bool public isActive = true;
     mapping(address => Hiring) public hiredApplicants;
+    address[] public hiredApplicantsArray;
     mapping(address => ApplicationMetadata) public receivedApplications;
+    address[] public receivedApplicationsArray;
     string public jobClosingReason;
 
     constructor(
@@ -150,41 +152,46 @@ contract JobPosting {
         uint offset
     ) public view returns (Hiring[] memory) {
         uint limit = 100;
-        Hiring[] memory hiredApplicantsArray = new Hiring[](limit);
+        Hiring[] memory array = new Hiring[](limit);
         uint hiredApplicantsArrayIndex = offset;
         uint end = offset + limit > currentHiredCount
             ? currentHiredCount
             : offset + limit;
         for (uint i = offset; i < end; i++) {
-            if (hiredApplicants[companyProfileOwner].applicant != address(0)) {
-                hiredApplicantsArray[
-                    hiredApplicantsArrayIndex
-                ] = hiredApplicants[companyProfileOwner];
+            address jobApplicantAddress = hiredApplicantsArray[i];
+            if (hiredApplicants[jobApplicantAddress].applicant != address(0)) {
+                array[hiredApplicantsArrayIndex] = hiredApplicants[
+                    jobApplicantAddress
+                ];
                 hiredApplicantsArrayIndex++;
             }
         }
-        return hiredApplicantsArray;
+        return array;
     }
 
     function getReceivedApplications(
         uint offset
-    ) public view returns (JobApplication[] memory) {
+    ) public view returns (JobApplicationMetadata[] memory) {
         uint limit = 100;
-        JobApplication[]
-            memory receivedApplicationsArray = new JobApplication[](limit);
+        JobApplicationMetadata[] memory array = new JobApplicationMetadata[](
+            limit
+        );
         uint receivedApplicationsArrayIndex = offset;
         uint end = offset + limit > currentHiredCount
             ? currentHiredCount
             : offset + limit;
         for (uint i = offset; i < end; i++) {
-            if (receivedApplications[companyProfileOwner].applied == true) {
-                receivedApplicationsArray[
-                    receivedApplicationsArrayIndex
-                ] = receivedApplications[companyProfileOwner].jobApplication;
+            address jobApplicantAddress = receivedApplicationsArray[i];
+            if (receivedApplications[jobApplicantAddress].applied == true) {
+                JobApplication jobApplication = receivedApplications[
+                    jobApplicantAddress
+                ].jobApplication;
+                array[receivedApplicationsArrayIndex] = jobApplication
+                    .getJobApplicationMetadata();
                 receivedApplicationsArrayIndex++;
             }
         }
-        return receivedApplicationsArray;
+        return array;
     }
 
     function getJobPostingMetadata()
@@ -244,6 +251,7 @@ contract JobPosting {
             address(jobApplication),
             true
         );
+        receivedApplicationsArray.push(msg.sender);
         developerAddress.transfer(msg.value);
     }
 
@@ -262,6 +270,7 @@ contract JobPosting {
             .jobApplication;
         jobApplication.onReceiveHire();
         hiredApplicants[_applicant] = Hiring(_applicant, block.timestamp);
+        hiredApplicantsArray.push(_applicant);
         currentHiredCount++;
     }
 
