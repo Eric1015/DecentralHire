@@ -152,11 +152,11 @@ contract JobPosting {
         uint offset
     ) public view returns (Hiring[] memory) {
         uint limit = 100;
-        Hiring[] memory array = new Hiring[](limit);
-        uint hiredApplicantsArrayIndex = offset;
-        uint end = offset + limit > currentHiredCount
-            ? currentHiredCount
+        uint hiredApplicantsArrayIndex = 0;
+        uint end = offset + limit > hiredApplicantsArray.length
+            ? hiredApplicantsArray.length
             : offset + limit;
+        Hiring[] memory array = new Hiring[](end - offset);
         for (uint i = offset; i < end; i++) {
             address jobApplicantAddress = hiredApplicantsArray[i];
             if (hiredApplicants[jobApplicantAddress].applicant != address(0)) {
@@ -173,13 +173,13 @@ contract JobPosting {
         uint offset
     ) public view returns (JobApplicationMetadata[] memory) {
         uint limit = 100;
-        JobApplicationMetadata[] memory array = new JobApplicationMetadata[](
-            limit
-        );
-        uint receivedApplicationsArrayIndex = offset;
-        uint end = offset + limit > currentHiredCount
-            ? currentHiredCount
+        uint receivedApplicationsArrayIndex = 0;
+        uint end = offset + limit > receivedApplicationsArray.length
+            ? receivedApplicationsArray.length
             : offset + limit;
+        JobApplicationMetadata[] memory array = new JobApplicationMetadata[](
+            end - offset
+        );
         for (uint i = offset; i < end; i++) {
             address jobApplicantAddress = receivedApplicationsArray[i];
             if (receivedApplications[jobApplicantAddress].applied == true) {

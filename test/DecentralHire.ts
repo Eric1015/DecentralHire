@@ -6,6 +6,7 @@ import { loadFixture } from '@nomicfoundation/hardhat-network-helpers';
 describe('DecentralHire', function () {
   const name = 'Example Company';
   const websiteUrl = 'https://example.com';
+  const logoCid = 'QmXnYz';
 
   async function setupFixture() {
     const DecentralHire = await ethers.getContractFactory('DecentralHire');
@@ -18,7 +19,8 @@ describe('DecentralHire', function () {
     const { decentralHire } = await loadFixture(setupFixture);
     const createProfileTx = await decentralHire.createCompanyProfile(
       name,
-      websiteUrl
+      websiteUrl,
+      logoCid
     );
     await createProfileTx.wait();
 

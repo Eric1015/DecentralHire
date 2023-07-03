@@ -17,10 +17,15 @@ describe('JobApplication', function () {
     developer = accounts[1];
     companyProfileOwner = accounts[2];
 
+    const DecentralHire = await ethers.getContractFactory('DecentralHire');
+    const decentralHire = await DecentralHire.deploy();
+    const eventEmitterAddress = await decentralHire.getEventEmitterAddress();
+
     // Deploy JobPosting contract
     const JobPosting = await ethers.getContractFactory('JobPosting');
     const jobPosting = await JobPosting.deploy(
       developer.address,
+      eventEmitterAddress,
       companyProfileOwner.address,
       'Job Title',
       'QmXnYz',
@@ -33,6 +38,7 @@ describe('JobApplication', function () {
     // Deploy JobApplication contract
     const JobApplication = await ethers.getContractFactory('JobApplication');
     const jobApplication = await JobApplication.deploy(
+      eventEmitterAddress,
       applicant.address,
       jobPosting.address,
       resumeCid

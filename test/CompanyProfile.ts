@@ -14,6 +14,11 @@ describe('CompanyProfile', function () {
 
   async function setupFixture() {
     [owner, addr1, developer] = await ethers.getSigners();
+
+    const DecentralHire = await ethers.getContractFactory('DecentralHire');
+    const decentralHire = await DecentralHire.deploy();
+    const eventEmitterAddress = await decentralHire.getEventEmitterAddress();
+
     const CompanyProfile = await ethers.getContractFactory(
       'CompanyProfile',
       owner
@@ -21,7 +26,9 @@ describe('CompanyProfile', function () {
     JobPosting = await ethers.getContractFactory('JobPosting');
     const companyProfile = await CompanyProfile.deploy(
       developer.address,
+      eventEmitterAddress,
       owner.address,
+      '',
       '',
       ''
     );

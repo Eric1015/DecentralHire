@@ -19,9 +19,14 @@ describe('JobPosting', function () {
     companyProfileOwner = accounts[2];
     applicant = accounts[3];
 
+    const DecentralHire = await ethers.getContractFactory('DecentralHire');
+    const decentralHire = await DecentralHire.deploy();
+    const eventEmitterAddress = await decentralHire.getEventEmitterAddress();
+
     const JobPosting = await ethers.getContractFactory('JobPosting');
     const jobPosting = await JobPosting.deploy(
       developer.address,
+      eventEmitterAddress,
       companyProfileOwner.address,
       'Job Title',
       'QmXnYz',
@@ -48,16 +53,19 @@ describe('JobPosting', function () {
 
       await createJobApplicationTx.wait();
 
-      const applicationMetadata = await jobPosting.receivedApplications(
+      const applicationMetadataList = await jobPosting.getReceivedApplications(
+        0
+      );
+      expect(applicationMetadataList.length).to.equal(1);
+      expect(applicationMetadataList[0].applicantAddress).to.equal(
         applicant.address
       );
-      expect(applicationMetadata.applied).to.be.true;
 
       expect(createJobApplicationTx)
         .to.emit(jobPosting, 'JobApplicationCreatedEvent')
         .withArgs(
           applicant.address,
-          applicationMetadata.jobApplicationAddress,
+          applicationMetadataList[0].jobApplicationAddress,
           resumeCid
         );
     });
