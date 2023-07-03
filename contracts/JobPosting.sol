@@ -62,7 +62,6 @@ contract JobPosting {
     }
 
     struct ApplicationMetadata {
-        JobApplication jobApplication;
         address jobApplicationAddress;
         bool applied;
     }
@@ -183,9 +182,10 @@ contract JobPosting {
         for (uint i = offset; i < end; i++) {
             address jobApplicantAddress = receivedApplicationsArray[i];
             if (receivedApplications[jobApplicantAddress].applied == true) {
-                JobApplication jobApplication = receivedApplications[
-                    jobApplicantAddress
-                ].jobApplication;
+                JobApplication jobApplication = JobApplication(
+                    receivedApplications[jobApplicantAddress]
+                        .jobApplicationAddress
+                );
                 array[receivedApplicationsArrayIndex] = jobApplication
                     .getJobApplicationMetadata();
                 receivedApplicationsArrayIndex++;
@@ -247,7 +247,6 @@ contract JobPosting {
             resumeCid
         );
         receivedApplications[msg.sender] = ApplicationMetadata(
-            jobApplication,
             address(jobApplication),
             true
         );
@@ -259,24 +258,27 @@ contract JobPosting {
         address _applicant,
         string memory _offerCid
     ) public onlyOwner onlyWhileActive onlyWhenApplicantExists(_applicant) {
-        JobApplication jobApplication = receivedApplications[_applicant]
-            .jobApplication;
+        JobApplication jobApplication = JobApplication(
+            receivedApplications[_applicant].jobApplicationAddress
+        );
         jobApplication.onReceiveOffer(_offerCid);
     }
 
     function decline(
         address _applicant
     ) public onlyOwner onlyWhileActive onlyWhenApplicantExists(_applicant) {
-        JobApplication jobApplication = receivedApplications[_applicant]
-            .jobApplication;
+        JobApplication jobApplication = JobApplication(
+            receivedApplications[_applicant].jobApplicationAddress
+        );
         jobApplication.onReceiveDecline();
     }
 
     function hire(
         address _applicant
     ) public onlyOwner onlyIfSpotAvailable onlyWhenApplicantExists(_applicant) {
-        JobApplication jobApplication = receivedApplications[_applicant]
-            .jobApplication;
+        JobApplication jobApplication = JobApplication(
+            receivedApplications[_applicant].jobApplicationAddress
+        );
         jobApplication.onReceiveHire();
         hiredApplicants[_applicant] = Hiring(_applicant, block.timestamp);
         hiredApplicantsArray.push(_applicant);
