@@ -21,5 +21,6 @@ struct JobApplicationMetadata {
     address applicantAddress;
     address companyProfileOwner;
     string resumeCid;
+    string offerCid;
     string applicationStatus;
 }

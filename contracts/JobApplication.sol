@@ -98,6 +98,10 @@ contract JobApplication {
         return resumeCid;
     }
 
+    function getOffer() public view returns (string memory) {
+        return offerCid;
+    }
+
     function getJobPosting() public view returns (address) {
         return address(jobPosting);
     }
@@ -118,6 +122,7 @@ contract JobApplication {
                 applicant,
                 companyProfileOwner,
                 resumeCid,
+                offerCid,
                 getApplicationStatusString(applicationStatus)
             );
     }
