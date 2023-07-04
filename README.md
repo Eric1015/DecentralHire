@@ -2,6 +2,22 @@
 
 This is a blockchain project that makes the hiring process more transparent.
 
+To access the website: https://decentral-hire-web.vercel.app/
+
+***The project is running on Sepolia testnet and the data is subjected to removal or unaccessbile at any time.***
+
+### Structure
+
+![img](./DecentralHire.png)
+
+- Ethereum blockchain
+- Moralis streams API
+- Firebase firestore for indexing
+- Next.js dApp
+
+Other repositories:
+- [Frontend dApp](https://github.com/Eric1015/decentral-hire-web)
+- [Firebase functions](https://github.com/Eric1015/decentral-hire-firebase-functions)
 
 ### Commands
 
