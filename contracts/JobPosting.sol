@@ -82,6 +82,14 @@ contract JobPosting {
         _;
     }
 
+    modifier onlyFromCompanyProfile() {
+        require(
+            msg.sender == companyProfileAddress,
+            "Only company profile is allowed to perform the action."
+        );
+        _;
+    }
+
     modifier onlyWhileActive() {
         require(isActive, "Job Posting not active anymore.");
         _;
@@ -145,6 +153,10 @@ contract JobPosting {
 
     function getCurrentHiredCount() public view returns (uint) {
         return currentHiredCount;
+    }
+
+    function getIsActive() public view returns (bool) {
+        return isActive;
     }
 
     function getHiredApplicants(
@@ -287,7 +299,7 @@ contract JobPosting {
 
     function closePosting(
         string memory _reason
-    ) public onlyOwner onlyWhileActive {
+    ) public onlyFromCompanyProfile onlyWhileActive {
         jobClosingReason = _reason;
         isActive = false;
         EventEmitter eventEmitter = EventEmitter(eventEmitterAddress);

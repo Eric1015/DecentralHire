@@ -89,6 +89,21 @@ contract CompanyProfile {
         logoCid = _logoCid;
     }
 
+    function getCompanyProfileMetadata()
+        public
+        view
+        returns (CompanyProfileMetadata memory)
+    {
+        return
+            CompanyProfileMetadata({
+                companyProfileAddress: address(this),
+                owner: owner,
+                name: name,
+                websiteUrl: websiteUrl,
+                logoCid: logoCid
+            });
+    }
+
     // cost of 0.01 ETH is required to post a job
     function createJobPosting(
         string memory _title,

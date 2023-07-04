@@ -1,6 +1,14 @@
 // SPDX-License-Identifier: MIT License
 pragma solidity ^0.8.12;
 
+struct CompanyProfileMetadata {
+    address companyProfileAddress;
+    address owner;
+    string name;
+    string websiteUrl;
+    string logoCid;
+}
+
 struct JobPostingMetadata {
     address companyProfileAddress;
     address jobPostingAddress;
